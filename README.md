@@ -1,5 +1,7 @@
 # to-acronym
 
+[![Build Status](https://travis-ci.org/alexanderVu/to-acronym.svg?branch=main)](https://travis-ci.org/alexanderVu/to-acronym)
+
 Create acronym from one or more words.
 
 ## Install
