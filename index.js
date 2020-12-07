@@ -70,6 +70,50 @@ function getWordPriority (stringValue, isAcronym, isMixedCase) {
 }
 
 /**
+ * 
+ * @param {*} list 
+ * @param {*} isMixedCase 
+ * @returns {string} Returns acronym string.
+ */
+function acronymList (list, isMixedCase, options) {
+  list = list.map(value => {
+    const isAcronym = (isMixedCase && isUpperCaseOnly(value))
+    return {
+      value,
+      isAcronym,
+      isMixedCase,
+      acronym: getWordAcronym(value, isAcronym),
+      priority: getWordPriority(value, isAcronym, isMixedCase)
+    }
+  })
+  // concate string.
+  const reducer = (accumulator, current) => {
+    if (options.maxLength < list.length && current.priority === 0) {
+      return (typeof accumulator === 'object') ? accumulator.acronym : accumulator
+    }
+    return (typeof accumulator === 'object') ? accumulator.acronym + current.acronym : accumulator + current.acronym
+  }
+
+  return list.reduce(reducer)
+}
+
+function acronymWord (stringValue) {
+  const regexCharOnly = new RegExp('[a-zA-Z0-9]','g')
+  const regexVowe = new RegExp('[aeiouyAEIYOU]','g')
+  const reducer = (accumulator, current) => {
+    if (accumulator.slice(-1) !== current) {
+      return accumulator + current
+    }
+    return accumulator
+  }
+  let toAcronym = stringValue.match(regexCharOnly).join('')
+  toAcronym = toAcronym.replace(regexVowe, '')
+  toAcronym = toAcronym.toUpperCase().split('')
+  toAcronym = toAcronym.reduce(reducer)
+  return toAcronym
+}
+
+/**
  * Transform String with single word or multiple words to acronym.
  * @param {string} stringSource String to create acronym from.
  * @param {object} options 
@@ -89,25 +133,11 @@ function acronym (stringSource, options = {}) {
   const isLowerCase = hasLowerCase(stringSource)
   const isMixedCase = (isUpperCase && isLowerCase)
 
-  list = list.map(value => {
-    const isAcronym = (isMixedCase && isUpperCaseOnly(value))
-    return {
-      value,
-      isAcronym,
-      isMixedCase,
-      acronym: getWordAcronym(value, isAcronym),
-      priority: getWordPriority(value, isAcronym, isMixedCase)
-    }
-  })
-  // concate string.
-  const reducer = (accumulator, current) => {
-    if (_options.maxLength < list.length && current.priority === 0) {
-      return (typeof accumulator === 'object') ? accumulator.acronym : accumulator
-    }
-    return (typeof accumulator === 'object') ? accumulator.acronym + current.acronym : accumulator + current.acronym
+  if (list.length > 1) {
+    return acronymList(list, isMixedCase, _options)
   }
 
-  return list.reduce(reducer)
+  return acronymWord(list[0])
 }
 
 module.exports = { acronym }

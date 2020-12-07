@@ -31,6 +31,11 @@ describe('Acronym method', () => {
     expect(result).toBe('DSE')
   })
 
+  it('should transform single word to acronym', () => {
+    const result = acronym('System')
+    expect(result).toBe('STM')
+  })
+
   it('should return "NOSTRING" when value is not a string', () => {
     const result = acronym({ acronym: 'test'})
     expect(result).toBe('NOSTRING')
