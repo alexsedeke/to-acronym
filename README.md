@@ -19,7 +19,17 @@ const myAcronym = acronym('IBM Services')
 // returns IBMS
 const wordAcronym = acronym('System')
 // returns STM
+const prioAcronym = acronym('Systems for Green Planet', { highPriorityOnly: true })
+// returns SGP
 ```
+
+## Options
+
+| Option | Description | Default value |
+| ------------- |-------------| :-----:|
+| **maxLength** | Maximum length of the acronym to be formed | 5 |
+| **highPriorityOnly** | Only use words with high priority | false |
+| **acronymMaxLength** | Use built-in acronyms with maximum length. Longer acronyms are used than normal words | 2 |
 
 ## About
 
