@@ -51,6 +51,11 @@ describe('Acronym method', () => {
     expect(result).toBe('GES')
   })
 
+  it('should trim result when too long', () => {
+    const result = acronym('conclusion', { maxLength: 4 })
+    expect(result).toBe('CCLN')
+  })
+
   it('should return "NOSTRING" when value is not a string', () => {
     const result = acronym({ acronym: 'test'})
     expect(result).toBe('NOSTRING')

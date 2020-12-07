@@ -98,6 +98,11 @@ function acronymList (list, isMixedCase, options) {
   return list.reduce(reducer)
 }
 
+/**
+ * Transform String with single word to acronym.
+ * @param {string} stringValue String to create acronym from.
+ * @returns {string} Returns acronym string.
+ */
 function acronymWord (stringValue) {
   const regexCharOnly = new RegExp('[a-zA-Z0-9]','g')
   const regexVowe = new RegExp('[aeiouyAEIYOU]','g')
@@ -113,6 +118,26 @@ function acronymWord (stringValue) {
   toAcronym = toAcronym.reduce(reducer)
   return toAcronym
 }
+
+function trimAcronym (stringValue, maxLength) {
+  if (stringValue.length <= maxLength) {
+    return stringValue
+  }
+
+  const acronym = stringValue.split('')
+  // always remove the second and penultimate element
+  // con-clu-sion -> C-N-CL-S-N -> CCLN
+  let secondPosition = true
+  while (acronym.length > maxLength) {
+    if (secondPosition === true) {
+      acronym.splice(1, 1)
+    } else {
+      acronym.splice(acronym.length - 2, 1)
+    }
+    secondPosition = !secondPosition
+  }
+  return acronym.join('')
+ }
 
 /**
  * Transform String with single word or multiple words to acronym.
@@ -135,12 +160,16 @@ function acronym (stringSource, options = {}) {
   const isUpperCase = hasUpperCase(stringSource)
   const isLowerCase = hasLowerCase(stringSource)
   const isMixedCase = (isUpperCase && isLowerCase)
+  let acronym = ''
 
   if (list.length > 1) {
-    return acronymList(list, isMixedCase, _options)
+    acronym = acronymList(list, isMixedCase, _options)
+  } else {
+    acronym = acronymWord(list[0])
   }
-
-  return acronymWord(list[0])
+  
+  acronym = trimAcronym(acronym, _options.maxLength)
+  return acronym
 }
 
 module.exports = { acronym }
