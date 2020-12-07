@@ -42,8 +42,8 @@ function isLoverCaseOnly (stringValue) {
  * @param {boolean} isAcronym Is the String value a acronym.
  * @returns {string} First letter from string value.
  */
-function getWordAcronym (stringValue, isAcronym) {
-  if (isAcronym && stringValue.length <= 2) {
+function getWordAcronym (stringValue, isAcronym, acronymMaxLength = 2) {
+  if (isAcronym && stringValue.length <= acronymMaxLength) {
     return stringValue
   }
 
@@ -82,13 +82,14 @@ function acronymList (list, isMixedCase, options) {
       value,
       isAcronym,
       isMixedCase,
-      acronym: getWordAcronym(value, isAcronym),
+      acronym: getWordAcronym(value, isAcronym, options.acronymMaxLength),
       priority: getWordPriority(value, isAcronym, isMixedCase)
     }
   })
   // concate string.
   const reducer = (accumulator, current) => {
-    if (options.maxLength < list.length && current.priority === 0) {
+    // do not use lower priority values
+    if ((options.maxLength < list.length || options.highPriorityOnly === true) && current.priority === 0) {
       return (typeof accumulator === 'object') ? accumulator.acronym : accumulator
     }
     return (typeof accumulator === 'object') ? accumulator.acronym + current.acronym : accumulator + current.acronym
@@ -121,7 +122,9 @@ function acronymWord (stringValue) {
  */
 function acronym (stringSource, options = {}) {
   const _options = Object.assign({
-    maxLength: 5
+    maxLength: 5,
+    highPriorityOnly: false,
+    acronymMaxLength: 2
   }, options)
   if (typeof stringSource !== 'string') {
     return 'NOSTRING'

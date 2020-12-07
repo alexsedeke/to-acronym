@@ -36,6 +36,21 @@ describe('Acronym method', () => {
     expect(result).toBe('STM')
   })
 
+  it('should not use long inner acronym', () => {
+    const result = acronym('IBM System')
+    expect(result).toBe('IS')
+  })
+
+  it('should use long inner acronym', () => {
+    const result = acronym('IBM System', { acronymMaxLength: 3 })
+    expect(result).toBe('IBMS')
+  })
+
+  it('should use letters only with hight priotity', () => {
+    const result = acronym('GE green System', { highPriorityOnly: true })
+    expect(result).toBe('GES')
+  })
+
   it('should return "NOSTRING" when value is not a string', () => {
     const result = acronym({ acronym: 'test'})
     expect(result).toBe('NOSTRING')
