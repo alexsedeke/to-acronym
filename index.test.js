@@ -27,8 +27,8 @@ describe('Acronym method', () => {
   })
 
   it('should transform multiple mixedcase words and use only upper priority words', () => {
-    const result = acronym('Dual green Services for simple Environment')
-    expect(result).toBe('DSE')
+    const result = acronym('Dual Green Services for Simple Environment')
+    expect(result).toBe('DGSSE')
   })
 
   it('should transform single word to acronym', () => {
@@ -44,6 +44,11 @@ describe('Acronym method', () => {
   it('should use long inner acronym', () => {
     const result = acronym('IBM System', { acronymMaxLength: 3 })
     expect(result).toBe('IBMS')
+  })
+
+  it('should use also lower case letters when maxLength is not reached', () => {
+    const result = acronym('All birds get free food at out house', { maxLength: 5 })
+    expect(result).toBe('ABGFF')
   })
 
   it('should use letters only with hight priotity', () => {

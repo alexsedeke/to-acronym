@@ -1,6 +1,6 @@
 {
   "name": "to-acronym",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create acronym from one or more words.",
   "main": "index.js",
   "scripts": {

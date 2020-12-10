@@ -87,10 +87,23 @@ function acronymList (list, isMixedCase, options) {
     }
   })
   // concate string.
+
+  let freeAmount = options.maxLength - list.filter(element => element.priority > 0).length
+
   const reducer = (accumulator, current) => {
-    // do not use lower priority values
-    if ((options.maxLength < list.length || options.highPriorityOnly === true) && current.priority === 0) {
+    /*
+     * Don't use lower case letters when
+     *  - highPriorityOnly parameter is the to true
+     *  - total length of priority words is higher than maxLength parameter
+     *  - there are less priority words than maxLength parameter value, but
+     *    the maxLength value is already reached by using less priority words.
+     */
+    if ((current.priority === 0 && (options.maxLength < list.length && freeAmount <= 0))
+      || (options.highPriorityOnly === true && current.priority === 0)) {
       return (typeof accumulator === 'object') ? accumulator.acronym : accumulator
+    }
+    if (current.priority === 0) {
+      freeAmount--
     }
     return (typeof accumulator === 'object') ? accumulator.acronym + current.acronym : accumulator + current.acronym
   }
